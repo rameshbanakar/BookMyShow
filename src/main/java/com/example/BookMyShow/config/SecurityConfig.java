@@ -21,7 +21,8 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/v1/user/signup","/v1/user/login").permitAll()
-                        // .requestMatchers("/api/users/signup").permitAll() <-- Use this if your controller has @RequestMapping("/api/users")
+                        .requestMatchers("/v1/user/forgot-password").permitAll()
+                        .requestMatchers("/v1/user/reset-password").permitAll()
                         .anyRequest().authenticated()
                 );
 

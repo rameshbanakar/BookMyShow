@@ -4,7 +4,7 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -15,6 +15,9 @@ public class User extends BaseEntity{
     private String name;
     private String email;
     private String password;
+    private String resetToken;
+    private LocalDateTime resetTokenExpiry;
+
     @OneToMany(mappedBy = "user")
     private List<Booking> booking;
 

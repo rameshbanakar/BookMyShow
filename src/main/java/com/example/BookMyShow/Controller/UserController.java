@@ -1,16 +1,11 @@
 package com.example.BookMyShow.Controller;
 
-import com.example.BookMyShow.Dto.UserDto.UserLoginRequestDto;
-import com.example.BookMyShow.Dto.UserDto.UserResponseDto;
-import com.example.BookMyShow.Dto.UserDto.UserSignUpRequestDto;
+import com.example.BookMyShow.Dto.UserDto.*;
 import com.example.BookMyShow.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/user")
@@ -36,6 +31,7 @@ public class UserController {
            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(userResponseDto);
         }
     }
+
     @PostMapping("/login")
     public ResponseEntity<UserResponseDto> login(@RequestBody UserLoginRequestDto userLoginRequestDto){
         UserResponseDto userResponseDto=new UserResponseDto();
@@ -53,6 +49,31 @@ public class UserController {
         }
     }
 
+    @PostMapping("/forgot-password")
+    public ResponseEntity<UserResponseDto> forgotPassword(@RequestBody UserLoginRequestDto userLoginRequestDto){
+        UserResponseDto userResponseDto=new UserResponseDto();
+        try{
+            userService.generatePasswordResetToken(userLoginRequestDto);
+            userResponseDto.setMessage("Reset password link sent to mail");
+            return ResponseEntity.status(HttpStatus.OK).body(userResponseDto);
+        } catch (Exception e) {
+            userResponseDto.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userResponseDto);
+        }
+    }
 
+    @PostMapping("/reset-password")
+    public ResponseEntity<PasswordResponseDto> restPassword(@RequestParam("request_token") String token,
+                                                            @RequestBody ResetPasswordRequestDto request){
+        PasswordResponseDto passwordResponseDto=new PasswordResponseDto();
+        try{
+             userService.resetPassword(token,request);
+             passwordResponseDto.setMessage("Password updated successfully");
+             return ResponseEntity.ok().body(passwordResponseDto);
+        }catch (Exception e){
+            passwordResponseDto.setMessage(e.getMessage());
+            return ResponseEntity.badRequest().body(passwordResponseDto);
+        }
+    }
 
 }
