@@ -7,6 +7,7 @@ import com.example.BookMyShow.Dto.UserDto.ResetPasswordRequestDto;
 import com.example.BookMyShow.Dto.UserDto.UserLoginRequestDto;
 import com.example.BookMyShow.Dto.UserDto.UserSignUpRequestDto;
 import com.example.BookMyShow.Models.User;
+import com.example.BookMyShow.Models.UserRole;
 import com.example.BookMyShow.Repository.UserRepo;
 import com.example.BookMyShow.Service.NotificationService.NotificationService;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,6 +51,7 @@ public class UserService {
         User user=new User();
         user.setName(name);
         user.setEmail(email);
+        user.setUserRole(UserRole.USER);
         String hashPassword=passwordEncoder.encode(password);
         user.setPassword(hashPassword);
 
